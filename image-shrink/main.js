@@ -23,7 +23,7 @@ function createAboutWindow() {
   aboutWindow = new BrowserWindow({
     title: "ImageShrink",
     width: 300,
-    height: 200,
+    height: 250,
     icon: "./assets/icons/favicon-64x64.png",
     resizable: false,
   });
