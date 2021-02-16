@@ -10,11 +10,18 @@ let mainWindow, aboutWindow;
 function createMainWindow() {
   mainWindow = new BrowserWindow({
     title: "ImageShrink",
-    width: 500,
+    width: isDev ? 1100 : 500,
     height: 600,
     icon: "./assets/icons/favicon-64x64.png",
     resizable: isDev,
+    webPreferences: {
+      nodeIntegration: true,
+    },
   });
+
+  if (isDev) {
+    mainWindow.webContents.openDevTools();
+  }
 
   mainWindow.loadFile("./app/index.html");
 }
