@@ -5,6 +5,7 @@ const imagemin = require("imagemin");
 const imageminMozjpeg = require("imagemin-mozjpeg");
 const imageminPngquant = require("imagemin-pngquant");
 const slash = require("slash");
+const log = require("electron-log");
 
 process.env.NODE_ENV = "development";
 
@@ -115,10 +116,11 @@ async function shrinkImage({ imgPath, quality, dest }) {
         }),
       ],
     });
+    log.info(`Created file: ${files[0].destinationPath}`);
     shell.showItemInFolder(files[0].destinationPath);
     mainWindow.webContents.send("image:done");
   } catch (err) {
-    console.log(`Error ${err}`);
+    log.error(`Error ${err}`);
   }
 }
 
