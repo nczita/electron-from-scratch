@@ -29,3 +29,5 @@ function parseDataFile(filePath, defaults) {
     return defaults;
   }
 }
+
+module.exports = Store;
