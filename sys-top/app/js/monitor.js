@@ -1,12 +1,17 @@
 const path = require("path");
 const osu = require("node-os-utils");
-
+const { ipcRenderer } = require("electron");
 const cpu = osu.cpu;
 const mem = osu.mem;
 const os = osu.os;
 
-let cpuOverload = 5;
-let alertFrequency = 1;
+let cpuOverload;
+let alertFrequency;
+
+ipcRenderer.on("settings:get", (e, settings) => {
+  cpuOverload = +settings.cpuOverload;
+  alertFrequency = +settings.alertFrequency;
+});
 
 document.getElementById("cpu-model").innerText = cpu.model();
 document.getElementById("comp-name").innerText = os.hostname();
