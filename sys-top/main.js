@@ -54,15 +54,37 @@ app.on("ready", () => {
   const mainMenu = Menu.buildFromTemplate(menu);
   Menu.setApplicationMenu(mainMenu);
 
+  mainWindow.on("close", (e) => {
+    if (!app.isQuitting) {
+      e.preventDefault();
+      mainWindow.hide();
+    }
+    return true;
+  });
+
   const icon = path.join(__dirname, "assets", "icons", "tray_icon.png");
   tray = new Tray(icon);
-  tray.on("click", () => {
-    if (mainWindow.isVisible()) {
-      mainWindow.hide();
-    } else {
-      mainWindow.show();
-    }
-  });
+
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: "SysTop",
+      click: () => {
+        if (mainWindow.isVisible()) {
+          mainWindow.hide();
+        } else {
+          mainWindow.show();
+        }
+      },
+    },
+    {
+      label: "Quit",
+      click: () => {
+        app.isQuitting = true;
+        app.quit();
+      },
+    },
+  ]);
+  tray.setContextMenu(contextMenu);
 
   mainWindow.on("ready", () => (mainWindow = null));
 });
