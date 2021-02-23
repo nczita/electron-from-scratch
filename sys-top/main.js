@@ -1,8 +1,9 @@
-const { app, BrowserWindow, Menu, ipcMain, Tray } = require("electron");
+const { app, Menu, ipcMain } = require("electron");
 const path = require("path");
 const log = require("electron-log");
 const Store = require("./Store.js");
 const MainWindow = require("./MainWindow.js");
+const AppTray = require("./AppTray.js");
 
 // Set env
 process.env.NODE_ENV = "development";
@@ -46,28 +47,7 @@ app.on("ready", () => {
   });
 
   const icon = path.join(__dirname, "assets", "icons", "tray_icon.png");
-  tray = new Tray(icon);
-
-  const contextMenu = Menu.buildFromTemplate([
-    {
-      label: "SysTop",
-      click: () => {
-        if (mainWindow.isVisible()) {
-          mainWindow.hide();
-        } else {
-          mainWindow.show();
-        }
-      },
-    },
-    {
-      label: "Quit",
-      click: () => {
-        app.isQuitting = true;
-        app.quit();
-      },
-    },
-  ]);
-  tray.setContextMenu(contextMenu);
+  tray = new AppTray(icon, mainWindow);
 
   mainWindow.on("ready", () => (mainWindow = null));
 });
