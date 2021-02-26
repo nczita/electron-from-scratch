@@ -25,7 +25,7 @@ const App = () => {
     if (item.text === "" || item.user === "" || item.priority === "") {
       showAlert("Please enter all fields", "danger");
     }
-    setLogs([...logs, item]);
+    ipcRenderer.send("logs:add", item);
     showAlert("Log Added");
   }
 
