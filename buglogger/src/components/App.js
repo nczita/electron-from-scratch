@@ -19,6 +19,9 @@ const App = () => {
     ipcRenderer.on("logs:get", (e, logs) => {
       setLogs(JSON.parse(logs));
     });
+    ipcRenderer.on("logs:clear", () => {
+      setLogs([]);
+    });
   }, []);
 
   function addItem(item) {
@@ -30,7 +33,7 @@ const App = () => {
   }
 
   function deleteItem(_id) {
-    setLogs(logs.filter((item) => item._id !== _id));
+    ipcRenderer.send("logs:delete", _id);
     showAlert("Log Removed");
   }
 

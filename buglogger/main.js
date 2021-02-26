@@ -1,6 +1,6 @@
 const path = require("path");
 const url = require("url");
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, Menu } = require("electron");
 const Log = require("./models/Log");
 const connectDB = require("./config/db");
 
@@ -69,7 +69,42 @@ function createMainWindow() {
   mainWindow.on("closed", () => (mainWindow = null));
 }
 
-app.on("ready", createMainWindow);
+app.on("ready", () => {
+  createMainWindow();
+  const mainMenu = Menu.buildFromTemplate(menu);
+  Menu.setApplicationMenu(mainMenu);
+});
+
+const menu = [
+  {
+    role: "fileMenu",
+  },
+  {
+    role: "editMenu",
+  },
+  {
+    label: "Logs",
+    submenu: [
+      {
+        label: "Clear logs",
+        click: () => clearLogs(),
+      },
+    ],
+  },
+  ...(isDev
+    ? [
+        {
+          label: "Developer",
+          submenu: [
+            { role: "reload" },
+            { role: "forcereload" },
+            { type: "separator" },
+            { role: "toggledevtools" },
+          ],
+        },
+      ]
+    : []),
+];
 
 ipcMain.on("logs:load", sendLogs);
 
@@ -82,9 +117,27 @@ async function sendLogs() {
   }
 }
 
+async function clearLogs() {
+  try {
+    await Log.deleteMany({});
+    mainWindow.webContents.send("logs:clear");
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 ipcMain.on("logs:add", async (e, item) => {
   try {
     await Log.create(item);
+    sendLogs();
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+ipcMain.on("logs:delete", async (e, _id) => {
+  try {
+    await Log.findByIdAndDelete(_id);
     sendLogs();
   } catch (err) {
     console.log(err);
