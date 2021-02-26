@@ -1,75 +1,32 @@
-## Simple Electron React Boilerplate
+# BugLogger
 
-This is a simple boilerplate to get up and running with Electron and React. It is a customized version of [Alex Devero's](https://github.com/alexdevero/electron-react-webpack-boilerplate) repo and is used in my Electron course
-
-### Install
-
-#### Clone this repo
+## Mongo
 
 ```
-git clone https://github.com/bradtraversy/simple-electron-react.git
+$ docker-compose up -d
 ```
 
-#### Install dependencies
+Open Mongo Express at http://localhost:8081 (user and pass in dockker-compose.yml)
+
+Create database `buglogger`
+
+Run mongo shell:
 
 ```
-npm install
+$ docker exec -it mongodb mongo -u root
+# Pass password
 ```
 
-or
+Then in mongoshell:
 
 ```
-yarn
+> use buglogger
+> db.createUser(
+{
+    user: "test",
+    pwd: "testPass",
+    roles: [
+      { role: "readWrite", db: "buglogger" }
+    ]
+})
 ```
-
-### Usage
-
-#### Run the app
-
-```
-npm run start
-```
-
-or
-
-```
-yarn start
-```
-
-#### Build the app (automatic)
-
-```
-npm run package
-```
-
-or
-
-```
-yarn package
-```
-
-#### Build the app (manual)
-
-```
-npm run build
-```
-
-or
-
-```
-yarn build
-```
-
-#### Test the app (after `npm run build` || `yarn run build`)
-
-```
-npm run prod
-```
-
-```
-yarn prod
-```
-
-### Change app title
-
-Change the app title in the **webpack.build.config.js** and the **webpack.dev.config.js** files
